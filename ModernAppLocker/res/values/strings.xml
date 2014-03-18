@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ModernAppLocker</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_actionmode">Action Mode</string>
+    <string name="actionmode_title">Action Mode</string>
+    <string name="title_activity_main">ActionBar Demo</string>
+    <string name="frag1">Fragment 1</string>
+    <string name="frag2">Fragment 2</string>
+    <string name="started">app lock have started</string>
+
+    <string-array name="spinner_data">
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+    </string-array>
+
+    <string name="search">Search</string>
+    <string name="actionmode_cancel">Cancel ActionMode</string>
+    <string name="password_error">password error</string>
+    <string name="no_empty">no empty</string>
+    <string name="twice_diff">the twice inputs is\'nt same</string>
+
+    <string name="settings_label_pin">Enter your pin number</string>
+    <string name="settings_label_pattern">Draw your pattern</string>
+    <string name="settings_label_dialog">Select number of touch</string>
+    
+    
+</resources>

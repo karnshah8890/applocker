@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/settings_txt_label_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:paddingLeft="10dp"
+        android:text="Lock Type"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <RadioGroup
+        android:id="@+id/settings_rg_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_txt_label_type" >
+
+        <RadioButton
+            android:id="@+id/settings_rb_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:paddingLeft="30dp"
+            android:text="Pin" />
+
+        <RadioButton
+            android:id="@+id/settings_rb_pattern"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:text="Pattern" />
+
+        <RadioButton
+            android:id="@+id/settings_rb_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:text="Dialog" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/settings_rel_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/settings_rg_type"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/settings_rel_pin_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:paddingLeft="10dp"
+            android:text="@string/settings_label_pin"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/settings_rel_pin_edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_rel_pin_lbl" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_rel_pattern"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_rg_type"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/settings_rel_pattern_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:paddingLeft="10dp"
+            android:text="@string/settings_label_pattern"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <include
+            android:id="@+id/settings_app_lock_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_rel_pattern_lbl"
+            android:layout_centerInParent="true"
+            layout="@layout/alp_lock_pattern_view" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_rel_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/settings_rg_type"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/settings_rel_dialog_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/darker_gray"
+            android:paddingLeft="10dp"
+            android:text="@string/settings_label_dialog"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <SeekBar
+            android:id="@+id/settings_rel_dialog_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_rel_dialog_lbl" />
+
+        <TextView
+            android:id="@+id/settings_rel_dialog_touch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_rel_dialog_seekBar"
+            android:paddingLeft="10dp"
+            android:text="number of touch"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/settings_btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"
+        android:text="Save" />
+
+</RelativeLayout>

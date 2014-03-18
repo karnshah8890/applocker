@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ks.modernapplocker"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name="com.ks.modernapplocker.common.ModernAppLocker"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+
+        <!-- <activity -->
+        <!-- android:name="com.ks.modernapplocker.LockActivity" -->
+        <!-- android:label="@string/app_name" > -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity
+            android:name="com.ks.modernapplocker.AppListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Alp.MYTheme.Light" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ks.modernapplocker.LockActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:theme="@style/Alp.Theme.Light" />
+        <activity
+            android:name="com.ks.modernapplocker.LoginActivity"
+            android:label="@string/app_name" />
+
+        <service android:name="com.ks.modernapplocker.service.AppStartListenerService" />
+        <service android:name="com.ks.modernapplocker.service.ForegroundService" />
+
+        <receiver
+            android:name="com.ks.modernapplocker.receiver.AppStartReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.ks.modernapplocker.APP_START" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.KeepAliveReceiver" >
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

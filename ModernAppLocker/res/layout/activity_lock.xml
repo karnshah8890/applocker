@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/appLable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/appIcon"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/appDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appIcon"
+        android:text="AppLock Help You Protect Your Private"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/pw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appDesc"
+        android:layout_marginTop="10dp"
+        android:inputType="textPassword" >
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pw"
+        android:layout_marginTop="10dp"
+        android:text="Confirm" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_confirm">
+
+        <include
+            android:id="@+id/app_lock_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            layout="@layout/alp_lock_pattern_view" />
+    </RelativeLayout>
+
+</RelativeLayout>

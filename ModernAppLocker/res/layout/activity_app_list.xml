@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <ViewFlipper
+        android:id="@+id/app_list_viewFlipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+        <ListView
+            android:id="@+id/activity_app_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent"
+            android:fadingEdge="none"
+            android:listSelector="@android:color/transparent"
+            android:visibility="visible" >
+        </ListView>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/activity_settings" />
+    </ViewFlipper>
+
+    <TextView
+        android:id="@+id/activity_applist_txt_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Set your master password : "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/activity_applist_edt_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_txt_label"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/activity_applist_txt_label_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_edt_pass"
+        android:layout_marginTop="10dp"
+        android:text="Confirm password : "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/activity_applist_edt_confirm_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_txt_label_confirm"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/activity_applist_btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_applist_edt_confirm_pass"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:onClick="onClick"
+        android:text="Confirm"
+        android:visibility="gone" />
+
+</RelativeLayout>
