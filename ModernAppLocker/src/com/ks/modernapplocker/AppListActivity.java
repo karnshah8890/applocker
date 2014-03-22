@@ -105,16 +105,16 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 		preferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
 		pw_stroed = preferences.getString(Util.PW, "");
 
-		if (!pw_stroed.equals("")) {
-			try {
-				getAllApps();
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			}
-			if (arrayList.size() != 0) {
-				setValues();
-			}
-		} else {
+//		if (!pw_stroed.equals("")) {
+//			try {
+//				getAllApps();
+//			} catch (NameNotFoundException e) {
+//				e.printStackTrace();
+//			}
+//			if (arrayList.size() != 0) {
+//				setValues();
+//			}
+//		} else {
 			edtPassword = (EditText) findViewById(R.id.activity_applist_edt_pass);
 			edtConfirmPass = (EditText) findViewById(R.id.activity_applist_edt_confirm_pass);
 			edtPassword.setVisibility(View.VISIBLE);
@@ -123,7 +123,7 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 			((TextView) findViewById(R.id.activity_applist_txt_label)).setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.VISIBLE);
 			listView.setVisibility(View.GONE);
-		}
+//		}
 
 		rgLock.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -200,7 +200,7 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 	}
 
 	public void showDetails(int position) {
-
+		this.position=position;
 		AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
 		if (preferences.getString(arrayList.get(position).getPkgName() + Util.TYPE, "").equalsIgnoreCase(Util.PW)) {
 			expandCollapse(relPin);
@@ -329,6 +329,9 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 				}
 				editor1.commit();
 				AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
+				seekBar.setProgress(0);
+				((EditText) findViewById(R.id.settings_rel_pin_edt_password)).setText("");
+				mLockPatternView.clearPattern();
 			}
 			break;
 

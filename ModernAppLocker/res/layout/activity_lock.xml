@@ -14,8 +14,8 @@
         android:id="@+id/appLable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/appIcon"
         android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/appIcon"
         android:textSize="20sp" />
 
     <TextView
@@ -26,34 +26,36 @@
         android:text="AppLock Help You Protect Your Private"
         android:textSize="12sp" />
 
-    <EditText
-        android:id="@+id/pw"
+    <RelativeLayout
+        android:id="@+id/rel_pin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appDesc"
-        android:layout_marginTop="10dp"
-        android:inputType="textPassword" >
-    </EditText>
+        android:visibility="gone" >
 
-    <Button
-        android:id="@+id/btn_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pw"
-        android:layout_marginTop="10dp"
-        android:text="Confirm" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_confirm">
-
-        <include
-            android:id="@+id/app_lock_pattern"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/pw"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            layout="@layout/alp_lock_pattern_view" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword" >
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pw"
+            android:layout_marginTop="10dp"
+            android:text="Confirm" />
     </RelativeLayout>
+
+    <include
+        android:id="@+id/app_lock_pattern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appDesc"
+        layout="@layout/alp_lock_pattern_view" />
 
 </RelativeLayout>

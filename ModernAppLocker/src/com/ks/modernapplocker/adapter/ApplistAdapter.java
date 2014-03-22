@@ -98,6 +98,7 @@ public class ApplistAdapter extends BaseAdapter {
 				if (!checked) {
 					appInfo.setLockeIcon(context.getResources().getDrawable(
 							R.drawable.lock));
+					((AppListActivity)context).showDetails(position);
 				} else {
 					appInfo.setLockeIcon(context.getResources().getDrawable(
 							R.drawable.unlock));
@@ -107,7 +108,6 @@ public class ApplistAdapter extends BaseAdapter {
 				arrayList.set(position, appInfo);
 				((AppListActivity)context).setDatas(arrayList);
 				notifyDataSetChanged();
-				((AppListActivity)context).showDetails(position);
 			}
 		});
 		return convertView;

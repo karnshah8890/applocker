@@ -20,167 +20,156 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.audiofx.NoiseSuppressor;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.ks.modernapplocker.AppListActivity;
 import com.ks.modernapplocker.R;
 
 // Need the following import to get access to the app resources, since this
 // class is in a sub-package.
 
-
 /**
- * This is an example of implementing an application service that can
- * run in the "foreground".  It shows how to code this to work well by using
- * the improved Android 2.0 APIs when available and otherwise falling back
- * to the original APIs.  Yes: you can take this exact code, compile it
- * against the Android 2.0 SDK, and it will against everything down to
+ * This is an example of implementing an application service that can run in the "foreground". It shows how to code this to work well by using the improved Android 2.0 APIs when
+ * available and otherwise falling back to the original APIs. Yes: you can take this exact code, compile it against the Android 2.0 SDK, and it will against everything down to
  * Android 1.0.
  */
 public class ForegroundService extends Service {
-    public static final String ACTION_FOREGROUND = "com.ks.modernapplocker.FOREGROUND";
-    static final String ACTION_BACKGROUND = "com.ks.modernapplocker.BACKGROUND";
+	public static final String ACTION_FOREGROUND = "com.ks.modernapplocker.FOREGROUND";
+	static final String ACTION_BACKGROUND = "com.ks.modernapplocker.BACKGROUND";
 
-    private static final Class<?>[] mSetForegroundSignature = new Class[] {
-        boolean.class};
-    private static final Class<?>[] mStartForegroundSignature = new Class[] {
-        int.class, Notification.class};
-    private static final Class<?>[] mStopForegroundSignature = new Class[] {
-        boolean.class};
+	private static final Class<?>[] mSetForegroundSignature = new Class[] { boolean.class };
+	private static final Class<?>[] mStartForegroundSignature = new Class[] { int.class, Notification.class };
+	private static final Class<?>[] mStopForegroundSignature = new Class[] { boolean.class };
 
-//    private NotificationManager mNM;
-    private Method mSetForeground;
-    private Method mStartForeground;
-    private Method mStopForeground;
-    private Object[] mSetForegroundArgs = new Object[1];
-    private Object[] mStartForegroundArgs = new Object[2];
-    private Object[] mStopForegroundArgs = new Object[1];
+	 private NotificationManager mNM;
+	private Method mSetForeground;
+	private Method mStartForeground;
+	private Method mStopForeground;
+	private Object[] mSetForegroundArgs = new Object[1];
+	private Object[] mStartForegroundArgs = new Object[2];
+	private Object[] mStopForegroundArgs = new Object[1];
 
-    void invokeMethod(Method method, Object[] args) {
-        try {
-            method.invoke(this, args);
-        } catch (InvocationTargetException e) {
-            // Should not happen.
-            Log.w("ApiDemos", "Unable to invoke method", e);
-        } catch (IllegalAccessException e) {
-            // Should not happen.
-            Log.w("ApiDemos", "Unable to invoke method", e);
-        }
-    }
+	void invokeMethod(Method method, Object[] args) {
+		try {
+			method.invoke(this, args);
+		} catch (InvocationTargetException e) {
+			// Should not happen.
+			Log.w("ApiDemos", "Unable to invoke method", e);
+		} catch (IllegalAccessException e) {
+			// Should not happen.
+			Log.w("ApiDemos", "Unable to invoke method", e);
+		}
+	}
 
-    /**
-     * This is a wrapper around the new startForeground method, using the older
-     * APIs if it is not available.
-     */
-    void startForegroundCompat(int id) {
-        // If we have the new startForeground API, then use it.
-        if (mStartForeground != null) {
-            mStartForegroundArgs[0] = Integer.valueOf(id);
-//            mStartForegroundArgs[1] = notification;
-            invokeMethod(mStartForeground, mStartForegroundArgs);
-            return;
-        }
+	/**
+	 * This is a wrapper around the new startForeground method, using the older APIs if it is not available.
+	 */
+	void startForegroundCompat(int id,Notification notification) {
+		// If we have the new startForeground API, then use it.
+		if (mStartForeground != null) {
+			mStartForegroundArgs[0] = Integer.valueOf(id);
+			mStartForegroundArgs[1] = notification;
+			invokeMethod(mStartForeground, mStartForegroundArgs);
+			mNM.cancel(id);
+			return;
+		}
 
-        // Fall back on the old API.
-        mSetForegroundArgs[0] = Boolean.TRUE;
-        invokeMethod(mSetForeground, mSetForegroundArgs);
-//        mNM.notify(id, notification);
-    }
+		// Fall back on the old API.
+		mSetForegroundArgs[0] = Boolean.TRUE;
+		invokeMethod(mSetForeground, mSetForegroundArgs);
+		mNM.notify(id, notification);
+	}
 
-    /**
-     * This is a wrapper around the new stopForeground method, using the older
-     * APIs if it is not available.
-     */
-    void stopForegroundCompat(int id) {
-        // If we have the new stopForeground API, then use it.
-        if (mStopForeground != null) {
-            mStopForegroundArgs[0] = Boolean.TRUE;
-            invokeMethod(mStopForeground, mStopForegroundArgs);
-            return;
-        }
+	/**
+	 * This is a wrapper around the new stopForeground method, using the older APIs if it is not available.
+	 */
+	void stopForegroundCompat(int id) {
+		// If we have the new stopForeground API, then use it.
+		if (mStopForeground != null) {
+			mStopForegroundArgs[0] = Boolean.TRUE;
+			invokeMethod(mStopForeground, mStopForegroundArgs);
+			return;
+		}
 
-        // Fall back on the old API.  Note to cancel BEFORE changing the
-        // foreground state, since we could be killed at that point.
-//        mNM.cancel(id);
-        mSetForegroundArgs[0] = Boolean.FALSE;
-        invokeMethod(mSetForeground, mSetForegroundArgs);
-    }
+		// Fall back on the old API. Note to cancel BEFORE changing the
+		// foreground state, since we could be killed at that point.
+		// mNM.cancel(id);
+		mSetForegroundArgs[0] = Boolean.FALSE;
+		invokeMethod(mSetForeground, mSetForegroundArgs);
+	}
 
-    @Override
-    public void onCreate() {
-//        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        try {
-            mStartForeground = getClass().getMethod("startForeground",
-                    mStartForegroundSignature);
-            mStopForeground = getClass().getMethod("stopForeground",
-                    mStopForegroundSignature);
-            
-            return;
-        } catch (NoSuchMethodException e) {
-            // Running on an older platform.
-            mStartForeground = mStopForeground = null;
-        }
-        try {
-            mSetForeground = getClass().getMethod("setForeground",
-                    mSetForegroundSignature);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(
-                    "OS doesn't have Service.startForeground OR Service.setForeground!");
-        }
-    }
+	@Override
+	public void onCreate() {
+		 mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		try {
+			mStartForeground = getClass().getMethod("startForeground", mStartForegroundSignature);
+			mStopForeground = getClass().getMethod("stopForeground", mStopForegroundSignature);
 
-    @Override
-    public void onDestroy() {
-        // Make sure our notification is gone.
-        stopForegroundCompat(R.string.app_name);
-    }
+			return;
+		} catch (NoSuchMethodException e) {
+			// Running on an older platform.
+			mStartForeground = mStopForeground = null;
+		}
+		try {
+			mSetForeground = getClass().getMethod("setForeground", mSetForegroundSignature);
+		} catch (NoSuchMethodException e) {
+			throw new IllegalStateException("OS doesn't have Service.startForeground OR Service.setForeground!");
+		}
+	}
 
-    // This is the old onStart method that will be called on the pre-2.0
-    // platform.  On 2.0 or later we override onStartCommand() so this
-    // method will not be called.
-    @Override
-    public void onStart(Intent intent, int startId) {
-        handleCommand(intent);
-    }
+	@Override
+	public void onDestroy() {
+		// Make sure our notification is gone.
+		stopForegroundCompat(R.string.app_name);
+	}
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        handleCommand(intent);
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
-        return super.onStartCommand(intent, START_STICKY, startId);
-    }
+	// This is the old onStart method that will be called on the pre-2.0
+	// platform. On 2.0 or later we override onStartCommand() so this
+	// method will not be called.
+	@Override
+	public void onStart(Intent intent, int startId) {
+		handleCommand(intent);
+	}
 
-    void handleCommand(Intent intent) {
-        if (ACTION_FOREGROUND.equals(intent.getAction())) {
-            // In this sample, we'll use the same text for the ticker and the expanded notification
-//            CharSequence text = getText(R.string.app_name);
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		handleCommand(intent);
+		// We want this service to continue running until it is explicitly
+		// stopped, so return sticky.
+		return super.onStartCommand(intent, START_STICKY, startId);
+	}
 
-            // Set the icon, scrolling text and timestamp
-//            Notification notification = new Notification(R.drawable.ic_launcher, text,
-//                    System.currentTimeMillis());
-//
-//            // The PendingIntent to launch our activity if the user selects this notification
-//            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-//                    new Intent(this, LoginActivity.class), 0);
-//
-//            // Set the info for the views that show in the notification panel.
-//            notification.setLatestEventInfo(this, getText(R.string.app_name),
-//                           text, contentIntent);
+	@SuppressWarnings("deprecation")
+	void handleCommand(Intent intent) {
+		if (intent != null && intent.getAction() != null && ACTION_FOREGROUND.equals(intent.getAction())) {
+			// In this sample, we'll use the same text for the ticker and the expanded notification
+			CharSequence text = getText(R.string.app_name);
 
-            startForegroundCompat(R.string.started);
+			// Set the icon, scrolling text and timestamp
+			Notification notification = new Notification(R.drawable.ic_launcher, text, System.currentTimeMillis());
 
-        } else if (ACTION_BACKGROUND.equals(intent.getAction())) {
-            stopForegroundCompat(R.string.app_name);
-        }
-    }
+			// The PendingIntent to launch our activity if the user selects this notification
+			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, AppListActivity.class), 0);
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+			// Set the info for the views that show in the notification panel.
+			notification.setLatestEventInfo(this, getText(R.string.app_name), text, contentIntent);
+			notification.flags=Notification.FLAG_AUTO_CANCEL;
+			startForegroundCompat(R.string.started,notification);
 
-   
+		} else if (intent != null && intent.getAction() != null && ACTION_BACKGROUND.equals(intent.getAction())) {
+			stopForegroundCompat(R.string.app_name);
+		}
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
 }

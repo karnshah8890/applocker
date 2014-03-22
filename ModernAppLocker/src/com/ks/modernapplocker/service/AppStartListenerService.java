@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Intent;
@@ -45,7 +46,9 @@ public class AppStartListenerService extends ForegroundService {
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-		passApp = intent.getStringExtra("passApp");
+		if (intent!=null) {
+			passApp = intent.getStringExtra("passApp");
+		}
 		if (passApp == null) {
 			passApp = "";
 		}
@@ -61,7 +64,7 @@ public class AppStartListenerService extends ForegroundService {
 	}
 
 	@Override
-	void startForegroundCompat(int id) {
+	void startForegroundCompat(int id, Notification notification) {
 
 		if (!isRunning && create) {
 			isRunning = true;
@@ -69,7 +72,7 @@ public class AppStartListenerService extends ForegroundService {
 			myThread.start();
 			Log.i(TAG, "startForegroundCompat");
 		}
-		super.startForegroundCompat(id);
+		super.startForegroundCompat(id,notification);
 	}
 
 	@Override

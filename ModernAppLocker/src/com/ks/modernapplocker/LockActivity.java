@@ -31,6 +31,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,13 +54,12 @@ public class LockActivity extends Activity implements OnClickListener {
 	private IEncrypter mEncrypter;
 	private static final long DELAY_TIME_TO_RELOAD_LOCK_PATTERN_VIEW = DateUtils.SECOND_IN_MILLIS;
 	private int mRetryCount = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lock);
-		initCompo();
 		packename = getIntent().getStringExtra("name");
+		initCompo();
 		id = getIntent().getIntExtra("id", 0);
 		initAppInfo();
 	}
@@ -71,6 +71,16 @@ public class LockActivity extends Activity implements OnClickListener {
 		appLable = (TextView) findViewById(R.id.appLable);
 		confirmButton.setOnClickListener(this);
 		sPreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+
+		if (!sPreferences.getString(packename+Util.TYPE, "").equalsIgnoreCase(Util.PW)) {
+//			((RelativeLayout)findViewById(R.id.rel_pin)).setVisibility(View.GONE);
+//			((RelativeLayout)findViewById(R.id.rel_lockpattern)).setVisibility(View.VISIBLE);
+			Log.e(TAG, " packename : " + packename);
+			initContentView();
+		}else {
+			((RelativeLayout)findViewById(R.id.rel_pin)).setVisibility(View.VISIBLE);
+			((LockPatternView)findViewById(R.id.settings_app_lock_pattern)).setVisibility(View.GONE);
+		}
 	}
 
 	private void initAppInfo() {
@@ -78,10 +88,10 @@ public class LockActivity extends Activity implements OnClickListener {
 		try {
 			ApplicationInfo info = pManager.getApplicationInfo(packename, PackageManager.GET_META_DATA);
 			PackageInfo pInfo = pManager.getPackageInfo(packename, PackageManager.GET_PERMISSIONS);
-			for (int i = 0; i < pInfo.requestedPermissions.length; i++) {
-				Log.e(TAG, " permission : " + pInfo.requestedPermissions[i]);
-			}
-			Log.e(TAG, " versionName : " + pInfo.versionName);
+//			for (int i = 0; i < pInfo.requestedPermissions.length; i++) {
+//				Log.e(TAG, " permission : " + pInfo.requestedPermissions[i]);
+//			}
+//			Log.e(TAG, " versionName : " + pInfo.versionName);
 			appIcon.setImageDrawable(info.loadIcon(pManager));
 			appLable.setText(info.loadLabel(pManager));
 
@@ -117,7 +127,7 @@ public class LockActivity extends Activity implements OnClickListener {
 		UI.adjustDialogSizeForLargeScreens(getWindow());
 
 		mLockPatternView = (LockPatternView) findViewById(R.id.app_lock_pattern);
-
+		Log.e(TAG, "m lock pattern : "+mLockPatternView);
 		/*
 		 * LOCK PATTERN VIEW
 		 */
@@ -159,7 +169,7 @@ public class LockActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v.getId() == R.id.btn_confirm) {
 			String pw = pwdEditText.getText().toString();
-			if (!pw.equals(sPreferences.getString(Util.PW, ""))) {
+			if (!pw.equals(sPreferences.getString(packename+Util.PW, ""))) {
 				// password error
 				Toast.makeText(this, getString(R.string.password_error), Toast.LENGTH_LONG).show();
 				return;
@@ -196,7 +206,10 @@ public class LockActivity extends Activity implements OnClickListener {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		initContentView();
+		Log.e(TAG, " packename : " + packename);
+		if (sPreferences.getString(packename+Util.TYPE, "").equalsIgnoreCase(Util.PATTERN)) {
+			initContentView();
+		}
 	}// onConfigurationChanged()
 
 	private final LockPatternView.OnPatternListener mLockPatternViewListener = new LockPatternView.OnPatternListener() {
@@ -253,9 +266,11 @@ public class LockActivity extends Activity implements OnClickListener {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
-
+				Log.e("APp list", "result : "+result);
 				if (result) {
-
+					haveChecked = true;
+					setupService();
+					finish();
 				} else {
 					mRetryCount++;
 					mLockPatternView.setDisplayMode(DisplayMode.Wrong);

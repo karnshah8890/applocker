@@ -42,8 +42,9 @@
         <activity
             android:name="com.ks.modernapplocker.LockActivity"
             android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
-            android:theme="@style/Alp.Theme.Light" />
+            android:theme="@style/Alp.MYTheme.Light" />
         <activity
             android:name="com.ks.modernapplocker.LoginActivity"
             android:label="@string/app_name" />
