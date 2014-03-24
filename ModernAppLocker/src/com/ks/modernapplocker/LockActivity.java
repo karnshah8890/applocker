@@ -13,7 +13,6 @@ import group.pals.android.lib.ui.lockpattern.widget.LockPatternView.DisplayMode;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.ks.modernapplocker.common.Util;
 import com.ks.modernapplocker.service.AppStartListenerService;
 
-public class LockActivity extends Activity implements OnClickListener {
+public class LockActivity extends ActionBarActivity implements OnClickListener {
 
 	private final String TAG = getClass().getSimpleName();
 	private EditText pwdEditText;
@@ -123,7 +123,7 @@ public class LockActivity extends Activity implements OnClickListener {
 		LockPatternView.DisplayMode lastDisplayMode = mLockPatternView != null ? mLockPatternView.getDisplayMode() : null;
 		List<Cell> lastPattern = mLockPatternView != null ? mLockPatternView.getPattern() : null;
 
-		setContentView(R.layout.alp_lock_pattern_activity);
+//		setContentView(R.layout.alp_lock_pattern_activity);
 		UI.adjustDialogSizeForLargeScreens(getWindow());
 
 		mLockPatternView = (LockPatternView) findViewById(R.id.app_lock_pattern);
@@ -254,6 +254,7 @@ public class LockActivity extends Activity implements OnClickListener {
 				if (currentPattern == null)
 					currentPattern = Settings.Security.getPattern(LockActivity.this);
 				if (currentPattern != null) {
+					Log.e(TAG, "pattern : "+String.valueOf(currentPattern));
 					if (mEncrypter != null)
 						return pattern.equals(mEncrypter.decrypt(LockActivity.this, currentPattern));
 					else

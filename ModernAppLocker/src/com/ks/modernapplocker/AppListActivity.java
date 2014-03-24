@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -54,6 +55,7 @@ import com.ks.modernapplocker.service.AppStartListenerService;
 
 public class AppListActivity extends ActionBarActivity implements OnClickListener {
 
+	private final String TAG = getClass().getSimpleName();
 	private ListView listView;
 	private ArrayList<AppInfo> arrayList;
 	private SharedPreferences preferences;
@@ -323,7 +325,8 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 				if (rgLock.getCheckedRadioButtonId() == R.id.settings_rb_pin) {
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, ((EditText) findViewById(R.id.settings_rel_pin_edt_password)).getText().toString());
 				} else if (rgLock.getCheckedRadioButtonId() == R.id.settings_rb_pattern) {
-					editor1.putString(arrayList.get(position).getPkgName() + lockType, pattern.toString());
+					editor1.putString(arrayList.get(position).getPkgName() + lockType, String.valueOf(pattern));
+					Log.e(TAG, "pattern : "+String.valueOf(pattern));
 				} else if (rgLock.getCheckedRadioButtonId() == R.id.settings_rb_dialog) {
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, String.valueOf(seekBar.getProgress()));
 				}
