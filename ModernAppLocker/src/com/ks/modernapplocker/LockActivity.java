@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -87,7 +86,7 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 		PackageManager pManager = getPackageManager();
 		try {
 			ApplicationInfo info = pManager.getApplicationInfo(packename, PackageManager.GET_META_DATA);
-			PackageInfo pInfo = pManager.getPackageInfo(packename, PackageManager.GET_PERMISSIONS);
+//			PackageInfo pInfo = pManager.getPackageInfo(packename, PackageManager.GET_PERMISSIONS);
 //			for (int i = 0; i < pInfo.requestedPermissions.length; i++) {
 //				Log.e(TAG, " permission : " + pInfo.requestedPermissions[i]);
 //			}

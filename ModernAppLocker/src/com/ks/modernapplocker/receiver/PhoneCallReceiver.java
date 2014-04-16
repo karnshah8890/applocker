@@ -1,16 +1,13 @@
 package com.ks.modernapplocker.receiver;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.ks.modernapplocker.AppListActivity;
 import com.ks.modernapplocker.R;
-import com.ks.modernapplocker.SplashActivity;
 import com.ks.modernapplocker.common.Util;
 
 /**

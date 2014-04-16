@@ -16,13 +16,13 @@ public class ModernAppLocker extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		try {
-			PackageManager p = getPackageManager();
-			ComponentName componentName = new ComponentName(getPackageName(), "com.ks.modernapplocker.SplashActivity");
-			p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			PackageManager p = getPackageManager();
+//			ComponentName componentName = new ComponentName(this, com.ks.modernapplocker.SplashActivity.class);
+//			p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 //		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 //				getApplicationContext())
 //				.threadPoolSize(3)

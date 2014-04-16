@@ -1,7 +1,6 @@
 package com.ks.modernapplocker;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ public class SplashActivity extends Activity {
 
 		try {
 			PackageManager p = getPackageManager();
-			ComponentName componentName = new ComponentName(getPackageName(),SplashActivity.class.getSimpleName());
+//			ComponentName componentName = new ComponentName(getPackageName(),SplashActivity.class.getSimpleName());
 			p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 		} catch (Exception e) {
 			e.printStackTrace();

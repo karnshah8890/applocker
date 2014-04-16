@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ks.modernapplocker"
-    android:versionCode="2"
-    android:versionName="2.0" >
+    android:versionCode="1"
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -78,8 +78,12 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.UpdateReceiver" >
-            <intent-filter  >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
     </application>
