@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.ks.modernapplocker.DialogActivity;
 import com.ks.modernapplocker.LockActivity;
 import com.ks.modernapplocker.R;
 import com.ks.modernapplocker.common.Util;
@@ -17,15 +18,19 @@ public class AppStartReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i("AppStartReceiver", "Receive a broadcast");
-		sharedPreferences = context.getSharedPreferences(
-				context.getString(R.string.app_name), Context.MODE_PRIVATE);
+		sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE);
 		// check pw
 		String name = intent.getStringExtra("name");
 		Log.i("AppStartReceiver", name + Util.LOKCED);
 		if (sharedPreferences.getBoolean(name + Util.LOKCED, false)) {
 			// to input password activity
-			Log.i("AppStartReceiver", "to activity");
-			intent.setClass(context, LockActivity.class);
+			if (sharedPreferences.getString(name + Util.TYPE, "").equalsIgnoreCase(Util.DIALOG)) {
+				Log.i("AppStartReceiver", "to dialog activity");
+				intent.setClass(context, DialogActivity.class);
+			} else {
+				Log.i("AppStartReceiver", "to activity");
+				intent.setClass(context, LockActivity.class);
+			}
 			context.startActivity(intent);
 			return;
 		}

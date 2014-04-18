@@ -46,8 +46,8 @@
         android:id="@+id/settings_rel_pin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@+id/settings_rg_type"
+        android:orientation="vertical"
         android:visibility="invisible" >
 
         <TextView
@@ -69,9 +69,9 @@
     <RelativeLayout
         android:id="@+id/settings_rel_pattern"
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_below="@+id/settings_rg_type"
+        android:orientation="vertical"
         android:visibility="invisible" >
 
         <TextView
@@ -96,8 +96,8 @@
         android:id="@+id/settings_rel_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@+id/settings_rg_type"
+        android:orientation="vertical"
         android:visibility="invisible" >
 
         <TextView
@@ -115,7 +115,8 @@
             android:id="@+id/settings_rel_dialog_seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_rel_dialog_lbl" />
+            android:layout_below="@+id/settings_rel_dialog_lbl"
+            android:max="10" />
 
         <TextView
             android:id="@+id/settings_rel_dialog_touch"

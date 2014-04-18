@@ -107,25 +107,25 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 		preferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
 		pw_stroed = preferences.getString(Util.PW, "");
 
-//		if (!pw_stroed.equals("")) {
-//			try {
-//				getAllApps();
-//			} catch (NameNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//			if (arrayList.size() != 0) {
-//				setValues();
-//			}
-//		} else {
-			edtPassword = (EditText) findViewById(R.id.activity_applist_edt_pass);
-			edtConfirmPass = (EditText) findViewById(R.id.activity_applist_edt_confirm_pass);
-			edtPassword.setVisibility(View.VISIBLE);
-			edtConfirmPass.setVisibility(View.VISIBLE);
-			((Button) findViewById(R.id.activity_applist_btn_confirm)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.activity_applist_txt_label)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.VISIBLE);
-			listView.setVisibility(View.GONE);
-//		}
+		// if (!pw_stroed.equals("")) {
+		// try {
+		// getAllApps();
+		// } catch (NameNotFoundException e) {
+		// e.printStackTrace();
+		// }
+		// if (arrayList.size() != 0) {
+		// setValues();
+		// }
+		// } else {
+		edtPassword = (EditText) findViewById(R.id.activity_applist_edt_pass);
+		edtConfirmPass = (EditText) findViewById(R.id.activity_applist_edt_confirm_pass);
+		edtPassword.setVisibility(View.VISIBLE);
+		edtConfirmPass.setVisibility(View.VISIBLE);
+		((Button) findViewById(R.id.activity_applist_btn_confirm)).setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.activity_applist_txt_label)).setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.VISIBLE);
+		listView.setVisibility(View.GONE);
+		// }
 
 		rgLock.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -202,7 +202,7 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 	}
 
 	public void showDetails(int position) {
-		this.position=position;
+		this.position = position;
 		AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
 		if (preferences.getString(arrayList.get(position).getPkgName() + Util.TYPE, "").equalsIgnoreCase(Util.PW)) {
 			expandCollapse(relPin);
@@ -326,15 +326,18 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, ((EditText) findViewById(R.id.settings_rel_pin_edt_password)).getText().toString());
 				} else if (rgLock.getCheckedRadioButtonId() == R.id.settings_rb_pattern) {
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, String.valueOf(pattern));
-					Log.e(TAG, "pattern : "+String.valueOf(pattern));
+					Log.e(TAG, "pattern : " + String.valueOf(pattern));
 				} else if (rgLock.getCheckedRadioButtonId() == R.id.settings_rb_dialog) {
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, String.valueOf(seekBar.getProgress()));
+					Log.e(getClass().getSimpleName(), "count : " + seekBar.getProgress());
 				}
 				editor1.commit();
 				AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
 				seekBar.setProgress(0);
 				((EditText) findViewById(R.id.settings_rel_pin_edt_password)).setText("");
-				mLockPatternView.clearPattern();
+				if (mLockPatternView != null) {
+					mLockPatternView.clearPattern();
+				}
 			}
 			break;
 
