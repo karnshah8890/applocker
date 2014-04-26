@@ -58,4 +58,12 @@
         android:layout_below="@+id/appDesc"
         layout="@layout/alp_lock_pattern_view" />
 
+    <RelativeLayout
+        android:id="@+id/activity_lock_rel_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone" >
+    </RelativeLayout>
+
 </RelativeLayout>

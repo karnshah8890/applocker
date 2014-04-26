@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name="com.ks.modernapplocker.common.ModernAppLocker"
@@ -63,6 +66,7 @@
 
         <service android:name="com.ks.modernapplocker.service.AppStartListenerService" />
         <service android:name="com.ks.modernapplocker.service.ForegroundService" />
+        <service android:name="com.ks.modernapplocker.service.CameraService" />
 
         <receiver
             android:name="com.ks.modernapplocker.receiver.AppStartReceiver"

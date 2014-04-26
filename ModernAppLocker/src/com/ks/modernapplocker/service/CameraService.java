@@ -4,9 +4,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.os.IBinder;
 import android.util.Log;
@@ -31,9 +31,9 @@ public class CameraService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
+		Log.e(getClass().getSimpleName(), "started >>>>>>>>>>>>>");
 		try {
-			mCamera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
+			mCamera = Camera.open();
 			SurfaceView sv = new SurfaceView(getApplicationContext());
 			mCamera.setPreviewDisplay(sv.getHolder());
 			parameters = mCamera.getParameters();
@@ -58,16 +58,17 @@ public class CameraService extends Service {
 
 		public void onPictureTaken(byte[] data, Camera camera) {
 			// decode the data obtained by the camera into a Bitmap
-
-			FileOutputStream outStream = null;
+			String fileName = "intruderImage";
 			try {
-				outStream = new FileOutputStream("/sdcard/Image.jpg");
+				FileOutputStream outStream = openFileOutput(fileName, Context.MODE_PRIVATE);
 				outStream.write(data);
 				outStream.close();
+				Log.e(getClass().getSimpleName(), "file saved >>>>>>>>>>>>>");
 			} catch (Exception e) {
-				Log.d("CAMERA", e.getMessage());
+				Log.e("CAMERA", e.getMessage());
 			}
 			mCamera.stopPreview();
+			mCamera.release();
 			stopSelf();
 		}
 	};
