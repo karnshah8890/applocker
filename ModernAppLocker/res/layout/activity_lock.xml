@@ -8,7 +8,7 @@
         android:id="@+id/appIcon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/app_locker" />
 
     <TextView
         android:id="@+id/appLable"
@@ -48,7 +48,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/pw"
             android:layout_marginTop="10dp"
-            android:text="Confirm" />
+            android:background="@color/stacked_green"
+            android:text="Confirm"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <include

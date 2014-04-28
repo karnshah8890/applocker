@@ -44,10 +44,10 @@ public class ForegroundService extends Service {
 	static final String ACTION_BACKGROUND = "com.ks.modernapplocker.BACKGROUND";
 
 	private static final Class<?>[] mSetForegroundSignature = new Class[] { boolean.class };
-	private static final Class<?>[] mStartForegroundSignature = new Class[] { int.class, Notification.class };
+	private static final Class<?>[] mStartForegroundSignature = new Class[] { int.class };
 	private static final Class<?>[] mStopForegroundSignature = new Class[] { boolean.class };
 
-	 private NotificationManager mNM;
+	// private NotificationManager mNM;
 	private Method mSetForeground;
 	private Method mStartForeground;
 	private Method mStopForeground;
@@ -70,20 +70,20 @@ public class ForegroundService extends Service {
 	/**
 	 * This is a wrapper around the new startForeground method, using the older APIs if it is not available.
 	 */
-	void startForegroundCompat(int id,Notification notification) {
+	void startForegroundCompat(int id) {
 		// If we have the new startForeground API, then use it.
 		if (mStartForeground != null) {
 			mStartForegroundArgs[0] = Integer.valueOf(id);
-			mStartForegroundArgs[1] = notification;
+			// mStartForegroundArgs[1] = notification;
 			invokeMethod(mStartForeground, mStartForegroundArgs);
-			mNM.cancel(id);
+			// mNM.cancel(id);
 			return;
 		}
 
 		// Fall back on the old API.
 		mSetForegroundArgs[0] = Boolean.TRUE;
 		invokeMethod(mSetForeground, mSetForegroundArgs);
-		mNM.notify(id, notification);
+		// mNM.notify(id, notification);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ForegroundService extends Service {
 
 	@Override
 	public void onCreate() {
-		 mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		// mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		try {
 			mStartForeground = getClass().getMethod("startForeground", mStartForegroundSignature);
 			mStopForeground = getClass().getMethod("stopForeground", mStopForegroundSignature);
@@ -152,15 +152,15 @@ public class ForegroundService extends Service {
 			CharSequence text = getText(R.string.app_name);
 
 			// Set the icon, scrolling text and timestamp
-			Notification notification = new Notification(R.drawable.ic_launcher, text, System.currentTimeMillis());
+			Notification notification = new Notification(R.drawable.app_locker, text, System.currentTimeMillis());
 
 			// The PendingIntent to launch our activity if the user selects this notification
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, AppListActivity.class), 0);
 
 			// Set the info for the views that show in the notification panel.
 			notification.setLatestEventInfo(this, getText(R.string.app_name), text, contentIntent);
-			notification.flags=Notification.FLAG_AUTO_CANCEL;
-			startForegroundCompat(R.string.started,notification);
+			notification.flags = Notification.FLAG_AUTO_CANCEL;
+			startForegroundCompat(R.string.started);
 
 		} else if (intent != null && intent.getAction() != null && ACTION_BACKGROUND.equals(intent.getAction())) {
 			stopForegroundCompat(R.string.app_name);

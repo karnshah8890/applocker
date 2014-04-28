@@ -22,6 +22,7 @@ public class Util {
 	public final static String LOKCED = "_locked";
 	public final static String PATTERN = "_pattern";
 	public final static String PW = "password";
+	public final static String USERNAME = "username";
 	public final static String DIALOG = "dialog";
 	public final static String TYPE = "_lock_type";
 	public final static String NUMBER = "_num";

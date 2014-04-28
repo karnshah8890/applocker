@@ -13,6 +13,7 @@ import group.pals.android.lib.ui.lockpattern.widget.LockPatternView.DisplayMode;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -35,6 +36,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -103,7 +105,8 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 
 				@Override
 				public void onOrientationChanged(int orientation) {
-					// Log.e(getClass().getSimpleName(), "orientation : "+orientation );
+					// Log.e(getClass().getSimpleName(),
+					// "orientation : "+orientation );
 					if (orientation >= 315 || orientation < 45) {
 						if (mOrientation != ORIENTATION_PORTRAIT_NORMAL) {
 							mOrientation = ORIENTATION_PORTRAIT_NORMAL;
@@ -222,7 +225,8 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 		PackageManager pManager = getPackageManager();
 		try {
 			ApplicationInfo info = pManager.getApplicationInfo(packename, PackageManager.GET_META_DATA);
-			// PackageInfo pInfo = pManager.getPackageInfo(packename, PackageManager.GET_PERMISSIONS);
+			// PackageInfo pInfo = pManager.getPackageInfo(packename,
+			// PackageManager.GET_PERMISSIONS);
 			// for (int i = 0; i < pInfo.requestedPermissions.length; i++) {
 			// Log.e(TAG, " permission : " + pInfo.requestedPermissions[i]);
 			// }
@@ -463,6 +467,9 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			cameraObject.stopPreview();
+			cameraObject.release();
+			relPreview.removeView(showCamera);
 		}
 
 		@Override
@@ -517,9 +524,6 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			cameraObject.stopPreview();
-			cameraObject.release();
-			relPreview.removeView(showCamera);
 			if (result) {
 				final ImageView imageView = new ImageView(LockActivity.this);
 				imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -563,13 +567,13 @@ public class LockActivity extends ActionBarActivity implements OnClickListener {
 			boolean isSended = false;
 			String host = "smtp.gmail.com";
 			String port = "587";
-			String mailFrom = "karnshah8890@gmail.com";
-			String password = "";
+			String mailFrom = "karn.shah@indianic.com";
+			String password = "bhumika83";
 
 			// message info
-			String mailTo = "karn.shah@indianic.com";
-			String subject = "New email with attachments";
-			String message = "I have some attachments for you.";
+			String mailTo = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE).getString(Util.USERNAME, "");// "karn.shah@indianic.com";
+			String subject = "ModernApp Locker finds one intruder.";
+			String message = "Someone is tryig to open " + appLable.getText().toString() + " at " + new Date().toString() + " but couldn't able to open it.";
 
 			// attachments
 			String[] attachFiles = new String[1];

@@ -19,7 +19,7 @@
     <application
         android:name="com.ks.modernapplocker.common.ModernAppLocker"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_locker"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 

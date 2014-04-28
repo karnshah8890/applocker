@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Intent;
@@ -16,12 +15,8 @@ import com.ks.modernapplocker.common.Util;
 public class AppStartListenerService extends ForegroundService {
 	/**
 	 * 
-	 * @author lance.liang ÕâÊÇÒ»¸öÒ»Ö±ÔÚºóÌ¨ÔËÐÐµÄ·þÎñ£¬
-	 *         ÆôÓÃÁËÒ»¸öÏß³Ì£¬Ã¿¸öÒ»Ã
-	 *         ë²éÑ¯Ò»ÏÂÎ»ÓÚ¶¥¶ËÓ¦ÓÃ³ÌÐòÊÇÊ²Ã´£¬Èç¹û·¢ÉúÁË±ä»¯
-	 *         ËµÃ÷ÐÂµÄÓ¦ÓÃ±»Æô¶¯
-	 *         ÁË£¬´ËÊ±·¢ËÍÒ»¸ö¹ã²¥Í¨Öª¹ã²¥½ÓÊÕÆ÷£¬ÔÚ¹ã²¥½ÓÊÕÆ÷ÀïÃæ
-	 *         ÅÐ¶ÏÓ¦ÓÃÊÇ·ñ¼ÓÃÜ
+	 * @author lance.liang ÕâÊÇÒ»¸öÒ»Ö±ÔÚºóÌ¨ÔËÐÐµÄ·þÎñ£¬ ÆôÓÃÁËÒ»¸öÏß³Ì£¬Ã¿¸öÒ»Ã ë²éÑ¯Ò»ÏÂÎ»ÓÚ¶¥¶ËÓ¦ÓÃ³ÌÐòÊÇÊ²Ã´£¬Èç¹û·¢ÉúÁË±ä»¯ ËµÃ÷ÐÂµÄÓ¦ÓÃ±»Æô¶¯
+	 *         ÁË£¬´ËÊ±·¢ËÍÒ»¸ö¹ã²¥Í¨Öª¹ã²¥½ÓÊÕÆ÷£¬ÔÚ¹ã²¥½ÓÊÕÆ÷ÀïÃæ ÅÐ¶ÏÓ¦ÓÃÊÇ·ñ¼ÓÃÜ
 	 */
 	final String TAG = getClass().getSimpleName();
 	boolean isRunning = false;
@@ -46,7 +41,7 @@ public class AppStartListenerService extends ForegroundService {
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-		if (intent!=null) {
+		if (intent != null) {
 			passApp = intent.getStringExtra("passApp");
 		}
 		if (passApp == null) {
@@ -64,7 +59,7 @@ public class AppStartListenerService extends ForegroundService {
 	}
 
 	@Override
-	void startForegroundCompat(int id, Notification notification) {
+	void startForegroundCompat(int id) {
 
 		if (!isRunning && create) {
 			isRunning = true;
@@ -72,7 +67,7 @@ public class AppStartListenerService extends ForegroundService {
 			myThread.start();
 			Log.i(TAG, "startForegroundCompat");
 		}
-		super.startForegroundCompat(id,notification);
+		super.startForegroundCompat(id);
 	}
 
 	@Override
@@ -113,11 +108,7 @@ public class AppStartListenerService extends ForegroundService {
 					if (rtinfos.size() > 0) {
 						RunningTaskInfo info = rtinfos.get(0);
 						String tempName = info.baseActivity.getPackageName();
-						if (!tempName.equals(getApplicationContext()
-								.getPackageName())
-								&& name != null
-								&& !name.equals(tempName)
-								&& !tempName.equals(passApp)) {
+						if (!tempName.equals(getApplicationContext().getPackageName()) && name != null && !name.equals(tempName) && !tempName.equals(passApp)) {
 							// isRunning = false;
 							// catch a new process on the top,send a broadcast
 							Log.i(TAG, "send a broadcast");

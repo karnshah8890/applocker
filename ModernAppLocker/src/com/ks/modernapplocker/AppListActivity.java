@@ -26,6 +26,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
@@ -33,14 +34,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
@@ -48,7 +51,6 @@ import android.widget.ViewAnimator;
 import com.ks.modernapplocker.adapter.ApplistAdapter;
 import com.ks.modernapplocker.common.AnimationFactory;
 import com.ks.modernapplocker.common.AnimationFactory.FlipDirection;
-import com.ks.modernapplocker.common.ExpandCollapseAnimation;
 import com.ks.modernapplocker.common.Util;
 import com.ks.modernapplocker.model.AppInfo;
 import com.ks.modernapplocker.service.AppStartListenerService;
@@ -73,6 +75,7 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 	private static final long DELAY_TIME_TO_RELOAD_LOCK_PATTERN_VIEW = DateUtils.SECOND_IN_MILLIS;
 	private int mMinWiredDots = 4;
 	public char[] pattern;
+	private View listItemView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,32 +101,43 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 		rgLock = (RadioGroup) findViewById(R.id.settings_rg_type);
 		seekBar = (SeekBar) findViewById(R.id.settings_rel_dialog_seekBar);
 		relPin = (RelativeLayout) findViewById(R.id.settings_rel_pin);
+		relPin.setVisibility(View.VISIBLE);
 		relPattern = (RelativeLayout) findViewById(R.id.settings_rel_pattern);
 		relDialog = (RelativeLayout) findViewById(R.id.settings_rel_dialog);
 		viewAnimator = (ViewAnimator) findViewById(R.id.app_list_viewFlipper);
+		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
 
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				((TextView) findViewById(R.id.settings_rel_dialog_txt_seek)).setText(progress + "/10");
+			}
+		});
 		arrayList = new ArrayList<AppInfo>();
 
 		preferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-		pw_stroed = preferences.getString(Util.PW, "");
-
-		// if (!pw_stroed.equals("")) {
-		// try {
-		// getAllApps();
-		// } catch (NameNotFoundException e) {
-		// e.printStackTrace();
-		// }
-		// if (arrayList.size() != 0) {
-		// setValues();
-		// }
-		// } else {
 		edtPassword = (EditText) findViewById(R.id.activity_applist_edt_pass);
 		edtConfirmPass = (EditText) findViewById(R.id.activity_applist_edt_confirm_pass);
-		edtPassword.setVisibility(View.VISIBLE);
-		edtConfirmPass.setVisibility(View.VISIBLE);
-		((Button) findViewById(R.id.activity_applist_btn_confirm)).setVisibility(View.VISIBLE);
+		pw_stroed = preferences.getString(Util.PW, "");
 		((TextView) findViewById(R.id.activity_applist_txt_label)).setVisibility(View.VISIBLE);
-		((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.VISIBLE);
+		((Button) findViewById(R.id.activity_applist_btn_confirm)).setVisibility(View.VISIBLE);
+		edtPassword.setVisibility(View.VISIBLE);
+
+		if (!pw_stroed.equals("")) {
+			((TextView) findViewById(R.id.activity_applist_txt_label)).setText("Enter password");
+		} else {
+			((TextView) findViewById(R.id.activity_applist_txt_label_note)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.activity_applist_txt_label_username)).setVisibility(View.VISIBLE);
+			((EditText) findViewById(R.id.activity_applist_edt_username)).setVisibility(View.VISIBLE);
+			edtConfirmPass.setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.VISIBLE);
+		}
 		listView.setVisibility(View.GONE);
 		// }
 
@@ -153,56 +167,52 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 		listView.setAdapter(adapter);
 	}
 
-	private void expandCollapse(View expand) {
-		Animation animation;
-		if (expand == relPin) {
-			if (relPattern.getVisibility() == View.VISIBLE) {
-				// new DropDownAnim(relPattern, relPattern.getHeight(), true).start();
-				animation = new ExpandCollapseAnimation(relPattern, ExpandCollapseAnimation.COLLAPSE, relPattern.getHeight());
-				animation.setDuration(1000);
-				relPattern.startAnimation(animation);
-			} else if (relDialog.getVisibility() == View.VISIBLE) {
-				animation = new ExpandCollapseAnimation(relDialog, ExpandCollapseAnimation.COLLAPSE, relDialog.getHeight());
-				animation.setDuration(1000);
-				relDialog.startAnimation(animation);
-			}
-			animation = new ExpandCollapseAnimation(relPin, ExpandCollapseAnimation.EXPAND, relPin.getHeight());
-			animation.setDuration(1000);
-			relPin.startAnimation(animation);
-		} else if (expand == relPattern) {
-			if (relPin.getVisibility() == View.VISIBLE) {
-				// new DropDownAnim(relPin, relPin.getHeight(), true).start();
-				animation = new ExpandCollapseAnimation(relPin, ExpandCollapseAnimation.COLLAPSE, relPin.getHeight());
-				animation.setDuration(1000);
-				relPin.startAnimation(animation);
-			} else if (relDialog.getVisibility() == View.VISIBLE) {
-				// new DropDownAnim(relDialog, relDialog.getHeight(), true).start();
-				animation = new ExpandCollapseAnimation(relDialog, ExpandCollapseAnimation.COLLAPSE, relDialog.getHeight());
-				animation.setDuration(1000);
-				relDialog.startAnimation(animation);
-			}
-			// new DropDownAnim(relPattern, relPattern.getHeight(), true).start();
-			animation = new ExpandCollapseAnimation(relPattern, ExpandCollapseAnimation.EXPAND, relPattern.getHeight());
-			animation.setDuration(1000);
-			relPattern.startAnimation(animation);
-		} else if (expand == relDialog) {
-			if (relPin.getVisibility() == View.VISIBLE) {
-				animation = new ExpandCollapseAnimation(relPin, ExpandCollapseAnimation.COLLAPSE, relPin.getHeight());
-				animation.setDuration(1000);
-				relPin.startAnimation(animation);
-			} else if (relPattern.getVisibility() == View.VISIBLE) {
-				animation = new ExpandCollapseAnimation(relPattern, ExpandCollapseAnimation.COLLAPSE, relPattern.getHeight());
-				animation.setDuration(1000);
-				relPattern.startAnimation(animation);
-			}
-			animation = new ExpandCollapseAnimation(relDialog, ExpandCollapseAnimation.EXPAND, relDialog.getHeight());
-			animation.setDuration(1000);
-			relDialog.startAnimation(animation);
+	@Override
+	public void onBackPressed() {
+		if (listView.getVisibility() == View.VISIBLE || edtPassword.getVisibility() == View.VISIBLE) {
+			super.onBackPressed();
+		} else {
+			AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
 		}
 	}
 
-	public void showDetails(int position) {
+	private void expandCollapse(View expand) {
+		if (expand == relPin) {
+			if (relPattern.getVisibility() == View.VISIBLE) {
+				relPattern.setVisibility(View.INVISIBLE);
+			} else if (relDialog.getVisibility() == View.VISIBLE) {
+				relDialog.setVisibility(View.INVISIBLE);
+			}
+			relPin.setVisibility(View.VISIBLE);
+		} else if (expand == relPattern) {
+			if (relPin.getVisibility() == View.VISIBLE) {
+				relPin.setVisibility(View.INVISIBLE);
+			} else if (relDialog.getVisibility() == View.VISIBLE) {
+				relDialog.setVisibility(View.INVISIBLE);
+			}
+			relPattern.setVisibility(View.VISIBLE);
+
+		} else if (expand == relDialog) {
+			if (relPin.getVisibility() == View.VISIBLE) {
+				relPin.setVisibility(View.INVISIBLE);
+			} else if (relPattern.getVisibility() == View.VISIBLE) {
+				relPattern.setVisibility(View.INVISIBLE);
+			}
+			relDialog.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private boolean isValidEmail(CharSequence target) {
+		if (target == null) {
+			return false;
+		} else {
+			return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+		}
+	}
+
+	public void showDetails(int position, View v) {
 		this.position = position;
+		listItemView = v;
 		AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
 		if (preferences.getString(arrayList.get(position).getPkgName() + Util.TYPE, "").equalsIgnoreCase(Util.PW)) {
 			expandCollapse(relPin);
@@ -212,6 +222,38 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 			seekBar.setProgress(Integer.parseInt(preferences.getString(arrayList.get(position).getPkgName() + Util.DIALOG, "0")));
 			expandCollapse(relDialog);
 		}
+	}
+
+	private class GetAllAppsTask extends AsyncTask<Void, Void, Void> {
+
+		private ProgressBar bar;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			bar = (ProgressBar) findViewById(R.id.activity_applist_progressbar);
+			bar.setVisibility(View.VISIBLE);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				getAllApps();
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			bar.setVisibility(View.GONE);
+			if (arrayList.size() != 0) {
+				setValues();
+			}
+		}
+
 	}
 
 	private void getAllApps() throws NameNotFoundException {
@@ -250,12 +292,23 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 				appInfo.setPermissions(strPremisssions.toString());
 				appInfo.setVersion(pInfo.versionName);
 				boolean locked = preferences.getBoolean(packagename + Util.LOKCED, false);
-				appInfo.setChecked(locked);
-				if (locked) {
+				if (activityname.contains("Settings")) {
+					appInfo.setChecked(true);
 					appInfo.setLockeIcon(getResources().getDrawable(R.drawable.lock));
+					Editor editor1 = preferences.edit();
+					editor1.putString(packagename + Util.TYPE, Util.PW);
+					editor1.putString(packagename + Util.PW, pw_stroed);
+					editor1.putBoolean(appInfo.getPkgName() + Util.LOKCED, true);
+					editor1.commit();
 				} else {
-					appInfo.setLockeIcon(getResources().getDrawable(R.drawable.unlock));
+					appInfo.setChecked(locked);
+					if (locked) {
+						appInfo.setLockeIcon(getResources().getDrawable(R.drawable.lock));
+					} else {
+						appInfo.setLockeIcon(getResources().getDrawable(R.drawable.unlock));
+					}
 				}
+
 				Intent luanchIntent = new Intent();
 				luanchIntent.setComponent(new ComponentName(packagename, activityname));
 				appInfo.setIntent(luanchIntent);
@@ -284,22 +337,34 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.activity_applist_btn_confirm:
+			if (!pw_stroed.equals("")) {
+				if (!pw_stroed.equalsIgnoreCase(edtPassword.getText().toString())) {
+					Toast.makeText(this, getString(R.string.password_error), Toast.LENGTH_LONG).show();
+					return;
+				}
+			} else {
+				String pwString = edtPassword.getText().toString();
+				String confirmString = edtConfirmPass.getText().toString();
+				EditText edtUserName = (EditText) findViewById(R.id.activity_applist_edt_username);
+				if (!isValidEmail(edtUserName.getText())) {
+					Toast.makeText(this, getString(R.string.invalid_email), Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (pwString.length() < 1 && confirmString.length() < 1) {
+					Toast.makeText(this, getString(R.string.no_empty), Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (!pwString.equals(confirmString)) {
+					Toast.makeText(this, getString(R.string.twice_diff), Toast.LENGTH_LONG).show();
+					return;
+				}
 
-			String pwString = edtPassword.getText().toString();
-			String confirmString = edtConfirmPass.getText().toString();
-			if (pwString.length() < 1 && confirmString.length() < 1) {
-				Toast.makeText(this, getString(R.string.no_empty), Toast.LENGTH_SHORT).show();
-				return;
+				pw_stroed = pwString;
+				Editor editor = preferences.edit();
+				editor.putString(Util.PW, pwString);
+				editor.putString(Util.USERNAME, edtUserName.getText().toString());
+				editor.commit();
 			}
-			if (!pwString.equals(confirmString)) {
-				Toast.makeText(this, getString(R.string.twice_diff), Toast.LENGTH_SHORT).show();
-				return;
-			}
-
-			pw_stroed = pwString;
-			Editor editor = preferences.edit();
-			editor.putString(Util.PW, pwString);
-			editor.commit();
 
 			listView.setVisibility(View.VISIBLE);
 			edtPassword.setVisibility(View.GONE);
@@ -307,15 +372,12 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 			((Button) findViewById(R.id.activity_applist_btn_confirm)).setVisibility(View.GONE);
 			((TextView) findViewById(R.id.activity_applist_txt_label)).setVisibility(View.GONE);
 			((TextView) findViewById(R.id.activity_applist_txt_label_confirm)).setVisibility(View.GONE);
+			((TextView) findViewById(R.id.activity_applist_txt_label_note)).setVisibility(View.GONE);
+			((TextView) findViewById(R.id.activity_applist_txt_label_username)).setVisibility(View.GONE);
+			((EditText) findViewById(R.id.activity_applist_edt_username)).setVisibility(View.GONE);
 
-			try {
-				getAllApps();
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			}
-			if (arrayList.size() != 0) {
-				setValues();
-			}
+			new GetAllAppsTask().execute();
+
 			break;
 
 		case R.id.settings_btn_save:
@@ -331,9 +393,25 @@ public class AppListActivity extends ActionBarActivity implements OnClickListene
 					editor1.putString(arrayList.get(position).getPkgName() + lockType, String.valueOf(seekBar.getProgress()));
 					Log.e(getClass().getSimpleName(), "count : " + seekBar.getProgress());
 				}
+
+				boolean checked = arrayList.get(position).isChecked();
+				AppInfo appInfo = (AppInfo) listView.getAdapter().getItem(position);
+				appInfo.setChecked(!checked);
+				if (!checked) {
+					appInfo.setLockeIcon(getResources().getDrawable(R.drawable.lock));
+				} else {
+					appInfo.setLockeIcon(getResources().getDrawable(R.drawable.unlock));
+				}
+				editor1.putBoolean(appInfo.getPkgName() + Util.LOKCED, !checked);
 				editor1.commit();
+				arrayList.set(position, appInfo);
+				((ApplistAdapter) listView.getAdapter()).setArrayList(arrayList);
+				if (listItemView != null) {
+					((ImageView) listItemView.findViewById(R.id.imageView2)).setImageDrawable(arrayList.get(position).getLockeIcon());
+					listItemView = null;
+				}
 				AnimationFactory.flipTransition(viewAnimator, FlipDirection.RIGHT_LEFT);
-				seekBar.setProgress(0);
+				seekBar.setProgress(1);
 				((EditText) findViewById(R.id.settings_rel_pin_edt_password)).setText("");
 				if (mLockPatternView != null) {
 					mLockPatternView.clearPattern();

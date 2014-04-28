@@ -3,20 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp" >
+    android:padding="5dp" >
 
     <ViewFlipper
         android:id="@+id/app_list_viewFlipper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:visibility="visible" >
 
         <ListView
             android:id="@+id/activity_app_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:cacheColorHint="@android:color/transparent"
+            android:divider="@null"
+            android:dividerHeight="10dp"
             android:fadingEdge="none"
             android:listSelector="@android:color/transparent"
             android:visibility="visible" >
@@ -29,11 +32,30 @@
     </ViewFlipper>
 
     <TextView
-        android:id="@+id/activity_applist_txt_label"
+        android:id="@+id/activity_applist_txt_label_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:text="Email* : "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/activity_applist_edt_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_txt_label_username"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/activity_applist_txt_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_edt_username"
         android:text="Set your master password : "
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone" />
@@ -45,6 +67,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/activity_applist_txt_label"
         android:layout_marginTop="10dp"
+        android:inputType="textPassword"
         android:visibility="gone" />
 
     <TextView
@@ -65,6 +88,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/activity_applist_txt_label_confirm"
         android:layout_marginTop="10dp"
+        android:inputType="textPassword"
         android:visibility="gone" />
 
     <Button
@@ -74,8 +98,34 @@
         android:layout_below="@+id/activity_applist_edt_confirm_pass"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:background="@color/stacked_green"
         android:onClick="onClick"
         android:text="Confirm"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/activity_applist_txt_label_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_applist_btn_confirm"
+        android:layout_marginTop="10dp"
+        android:text="* Please enter correct email address becuase photo of intruder will be sent on this mail."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/sa_green"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/activity_applist_progressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progressbar_bg"
         android:visibility="gone" />
 
 </RelativeLayout>

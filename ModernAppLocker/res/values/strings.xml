@@ -21,6 +21,7 @@
     <string name="actionmode_cancel">Cancel ActionMode</string>
     <string name="password_error">password error</string>
     <string name="no_empty">no empty</string>
+    <string name="invalid_email">Please enter correct Email address.</string>
     <string name="twice_diff">the twice inputs is\'nt same</string>
 
     <string name="settings_label_pin">Enter your pin number</string>

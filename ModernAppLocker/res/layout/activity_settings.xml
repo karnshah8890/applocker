@@ -63,7 +63,8 @@
             android:id="@+id/settings_rel_pin_edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_rel_pin_lbl" />
+            android:layout_below="@+id/settings_rel_pin_lbl"
+            android:inputType="numberPassword" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -111,30 +112,52 @@
             android:text="@string/settings_label_dialog"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <SeekBar
-            android:id="@+id/settings_rel_dialog_seekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_rel_dialog_lbl"
-            android:max="10" />
-
         <TextView
             android:id="@+id/settings_rel_dialog_touch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_rel_dialog_seekBar"
+            android:layout_below="@+id/settings_rel_dialog_lbl"
+            android:layout_marginTop="5dp"
             android:paddingLeft="10dp"
-            android:text="number of touch"
+            android:text="Set no. of click on error mesasge"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/settings_rel_dialog_txt_seek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/settings_rel_dialog_touch"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:paddingLeft="10dp"
+            android:text="1/10"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <SeekBar
+            android:id="@+id/settings_rel_dialog_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/settings_rel_dialog_txt_seek"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/settings_rel_dialog_txt_seek"
+            android:layout_below="@+id/settings_rel_dialog_touch"
+            android:layout_toLeftOf="@+id/settings_rel_dialog_txt_seek"
+            android:max="10"
+            android:progress="1" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/settings_btn_save"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="@color/stacked_green"
         android:onClick="onClick"
-        android:text="Save" />
+        android:text="Save"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
 </RelativeLayout>

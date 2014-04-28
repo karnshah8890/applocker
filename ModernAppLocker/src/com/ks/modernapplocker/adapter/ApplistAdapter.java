@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,28 +23,29 @@ public class ApplistAdapter extends BaseAdapter {
 
 	private final String TAG = getClass().getSimpleName();
 	private Context context;
-//	private ModernAppLocker appLocker;
-//	private DisplayImageOptions options;
+	// private ModernAppLocker appLocker;
+	// private DisplayImageOptions options;
 	private ArrayList<AppInfo> arrayList;
 	private SharedPreferences.Editor editor;
+	private Animation animation;
 
-	public ApplistAdapter(Context context, ArrayList<AppInfo> arrayList,
-			SharedPreferences preferences) {
+	public ApplistAdapter(Context context, ArrayList<AppInfo> arrayList, SharedPreferences preferences) {
 		this.context = context;
 		this.arrayList = arrayList;
-//		this.options = getImageOptions();
+		// this.options = getImageOptions();
 		editor = preferences.edit();
-//		appLocker = (ModernAppLocker) context.getApplicationContext();
+
+		// appLocker = (ModernAppLocker) context.getApplicationContext();
 	}
 
-//	private DisplayImageOptions getImageOptions() {
-//		final DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-//				.showStubImage(R.drawable.ic_launcher).cacheInMemory()
-//				.showImageForEmptyUri(R.drawable.ic_launcher).cacheOnDisc()
-//				.imageScaleType(ImageScaleType.EXACTLY).build();
-//
-//		return imageOptions;
-//	}
+	// private DisplayImageOptions getImageOptions() {
+	// final DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
+	// .showStubImage(R.drawable.ic_launcher).cacheInMemory()
+	// .showImageForEmptyUri(R.drawable.ic_launcher).cacheOnDisc()
+	// .imageScaleType(ImageScaleType.EXACTLY).build();
+	//
+	// return imageOptions;
+	// }
 
 	@Override
 	public int getCount() {
@@ -69,15 +72,11 @@ public class ApplistAdapter extends BaseAdapter {
 		final ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.row_app_list, null);
-			holder.imgIcon = (ImageView) convertView
-					.findViewById(R.id.imageView1);
-			holder.imgLock = (ImageView) convertView
-					.findViewById(R.id.imageView2);
+			convertView = LayoutInflater.from(context).inflate(R.layout.row_app_list, null);
+			holder.imgIcon = (ImageView) convertView.findViewById(R.id.imageView1);
+			holder.imgLock = (ImageView) convertView.findViewById(R.id.imageView2);
 			holder.txtName = (TextView) convertView.findViewById(R.id.txtName);
-			holder.txtVersion = (TextView) convertView
-					.findViewById(R.id.txtVersion);
+			holder.txtVersion = (TextView) convertView.findViewById(R.id.txtVersion);
 			// holder.txtPermission = (TextView) convertView
 			// .findViewById(R.id.txtPermission);
 			convertView.setTag(holder);
@@ -93,24 +92,29 @@ public class ApplistAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				boolean checked = arrayList.get(position).isChecked();
-				AppInfo appInfo = (AppInfo) getItem(position);
-				appInfo.setChecked(!checked);
 				if (!checked) {
-					appInfo.setLockeIcon(context.getResources().getDrawable(
-							R.drawable.lock));
-					((AppListActivity)context).showDetails(position);
+					((AppListActivity) context).showDetails(position, v);
 				} else {
-					appInfo.setLockeIcon(context.getResources().getDrawable(
-							R.drawable.unlock));
+					AppInfo appInfo = (AppInfo) arrayList.get(position);
+					appInfo.setChecked(false);
+					appInfo.setLockeIcon(context.getResources().getDrawable(R.drawable.unlock));
+					((ImageView) v.findViewById(R.id.imageView2)).setImageDrawable(context.getResources().getDrawable(R.drawable.unlock));
+					editor.putBoolean(appInfo.getPkgName() + Util.LOKCED, false);
+					editor.commit();
+					arrayList.set(position, appInfo);
 				}
-				editor.putBoolean(appInfo.getPkgName() + Util.LOKCED, !checked);
-				editor.commit();
-				arrayList.set(position, appInfo);
-				((AppListActivity)context).setDatas(arrayList);
-				notifyDataSetChanged();
 			}
 		});
+		animation = AnimationUtils.loadAnimation(context, R.anim.push_left_in);
+		animation.setDuration(500);
+		convertView.startAnimation(animation);
+		animation = null;
+
 		return convertView;
+	}
+
+	public void setArrayList(ArrayList<AppInfo> arrayList) {
+		this.arrayList = arrayList;
 	}
 
 }

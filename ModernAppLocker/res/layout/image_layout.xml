@@ -8,7 +8,7 @@
         android:id="@+id/imageView1"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/app_locker" />
 
     <TextView
         android:id="@+id/textView1"
